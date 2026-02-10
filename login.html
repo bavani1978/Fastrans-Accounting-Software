@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Login • Fastrans Accounting</title>
+  <link rel="stylesheet" href="assets/css/styles.css?v=24"/>
+  <script defer src="assets/js/app.js?v=24"></script>
+</head>
+<body>
+  <div class="login-wrap">
+    <div class="login-card">
+      <div class="login-left">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div class="logo"></div>
+          <div>
+            <h2>Fastrans Accounting</h2>
+            <p>Singapore-compliant accounting suite (UI prototype)</p>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="grid">
+          <div class="card" style="grid-column:span 12;">
+            <div class="hd"><h3>What’s inside</h3><span class="pill ok">Audit-ready</span></div>
+            <div class="bd">
+              <ul style="margin:0; padding-left:18px; color:rgba(231,238,252,.85); line-height:1.7;">
+                <li>GST Form 5 + reconciliation (timing differences + unreported invoices)</li>
+                <li>Payroll with IR8A auto roll-up</li>
+                <li>Corporate tax computation (mapping + adjustments)</li>
+                <li>ACRA financial statements pack</li>
+                <li>AR/AP ledgers + ageing + SOA emailing</li>
+                <li>Automated bank reconciliation (import → match → auto-post)</li>
+                <li>Supplier invoice inbox (upload/email ingestion concept)</li>
+              </ul>
+              <div class="small" style="margin-top:10px;">Demo credentials below.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="login-right">
+        <h3>Sign in</h3>
+        <div class="small">Use demo users:</div>
+        <div class="small" style="margin-top:6px;">
+          <span class="pill">admin / admin123</span>
+          <span class="pill" style="margin-left:6px;">accounts / accounts123</span>
+        </div>
+
+        <div class="hr"></div>
+
+        <div id="err" class="alert"></div>
+
+        <form id="loginForm" class="form" autocomplete="on">
+          <div class="field full">
+            <label>Username</label>
+            <input id="username" placeholder="e.g., admin" required />
+          </div>
+          <div class="field full">
+            <label>Password</label>
+            <input id="password" type="password" placeholder="••••••••" required />
+          </div>
+          <div class="field full" style="display:flex; gap:10px; align-items:center;">
+            <button class="btn primary" type="submit" style="flex:1;">Login</button>
+            <button class="btn" type="button" onclick="localStorage.clear(); APP.ensureUsers(); alert('Local demo data reset.');">Reset</button>
+          </div>
+        </form>
+
+        <div class="hr"></div>
+        <div class="small">
+          Security note: This is a static prototype using localStorage. For production, use server-side authentication.
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("loginForm");
+  const err = document.getElementById("err");
+  const params = new URLSearchParams(window.location.search);
+  const next = params.get("next") || "dashboard.html";
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    err.style.display = "none";
+    const u = document.getElementById("username").value.trim();
+    const p = document.getElementById("password").value;
+    const res = APP.login(u,p);
+    if(!res.ok){
+      err.textContent = res.message;
+      err.style.display = "block";
+      return;
+    }
+    window.location.href = next;
+  });
+});
+</script>
+</body>
+</html>
